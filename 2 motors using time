@@ -1,0 +1,38 @@
+#include <Servo.h>
+
+Servo knee;  // Create a Servo object
+Servo thigh;
+
+// Define the pin where the servo is connected
+const int servoPin = 6;
+const int servoPin1 = 5;
+
+// Define the duration for which the servo will rotate
+const int durationTo30Degrees = 1000; // Time in milliseconds to reach 30 degrees
+const int durationTo0Degrees = 1000;   // Time in milliseconds to return to 0 degrees
+//const int feedback=225;
+
+void setup() {
+  knee.attach(servoPin); // Attach the servo to the specified pin
+  thigh.attach(servoPin1);
+}
+
+void loop() {
+  // Move to 30 degrees (simulate by rotating in one direction)
+  knee.write(100); // Set to maximum speed in one direction
+  thigh.write(100);
+  delay(durationTo30Degrees);
+  thigh.write(90);
+  knee.write(90); // Stop the servo
+  delay(1000); // Wait for a second
+  
+
+  // Move back to 0 degrees (simulate by rotating in the opposite direction)
+  knee.write(80); // Set to maximum speed in the opposite direction
+  
+  thigh.write(80);
+  delay(durationTo0Degrees); // Wait for the duration to simulate returning to 0 degrees
+  knee.write(90);
+  thigh.write(90);
+  delay(1000); // Wait for a second
+}
