@@ -1,0 +1,69 @@
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+
+// Create an instance of the PCA9685 servo driver
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+// Define the servo pins on the PCA9685
+#define SERVO1 0
+#define SERVO2 1
+#define SERVO3 2
+
+// Define the minimum and maximum pulse lengths for the servos
+#define SERVOMIN 150  // This is the 'minimum' pulse length count (out of 4096)
+#define SERVOMAX 600  // This is the 'maximum' pulse length count (out of 4096)
+
+void setup() {
+  // Initialize the PCA9685 servo driver
+  pwm.begin();
+  pwm.setPWMFreq(50);  // Analog servos run at ~50 Hz updates
+
+  // Move all servos to 0 degrees initially
+  moveServo(SERVO1, 90);
+  moveServo(SERVO2, 90);
+  moveServo(SERVO3, 90);
+  delay(1000);
+}
+
+void loop() {
+  // Move servos from 0 to 180 degrees
+  for (int angle = 90; angle <= 120 ; angle++) {
+    moveServo(SERVO1,angle);
+    delay(15);  // Adjust the delay to control the speed of the servo movement
+  }
+  for (int angle = 90; angle <= 120 ; angle++) {
+    moveServo(SERVO2,angle);
+    delay(15);  // Adjust the delay to control the speed of the servo movement
+  }
+  for (int angle = 90; angle <= 120 ; angle++) {
+    moveServo(SERVO3,angle);
+    delay(15);  // Adjust the delay to control the speed of the servo movement
+  }
+  delay(1000);
+
+  for (int angle = 120; angle >= 90; angle--) {
+    moveServo(SERVO1, angle);
+    delay(15);  // Adjust the delay to control the speed of the servo movement
+  }
+
+  for (int angle = 120; angle >= 90; angle--) {
+    moveServo(SERVO2, angle);
+    delay(15);  // Adjust the delay to control the speed of the servo movement
+  }
+ 
+  for (int angle = 120; angle >= 90; angle--) {
+    moveServo(SERVO3, angle);
+    delay(15);  // Adjust the delay to control the speed of the servo movement
+    
+  }
+delay(1000);
+ moveServo(SERVO1, 90);
+ moveServo(SERVO2, 90);
+ moveServo(SERVO3, 90);
+}
+
+// Function to move a servo to a specific angle
+void moveServo(uint8_t servoNum, int angle) {
+  int pulseLength = map(angle, 0, 180, SERVOMIN, SERVOMAX);
+  pwm.setPWM(servoNum, 0, pulseLength);
+}
