@@ -1,0 +1,115 @@
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+
+// Create an instance of the PCA9685 servo driver
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+// Define the servo pins on the PCA9685
+#define SERVO1 0
+#define SERVO2 1
+#define SERVO3 2
+
+// Define the minimum and maximum pulse lengths for the servos
+#define SERVOMIN 150  // This is the 'minimum' pulse length count (out of 4096)
+#define SERVOMAX 600  // This is the 'maximum' pulse length count (out of 4096)
+
+
+
+void moveServo(uint8_t servoNum, int angle) {
+  int pulseLength = map(angle, 0, 180, SERVOMIN, SERVOMAX);
+  pwm.setPWM(servoNum, 0, pulseLength);
+}
+
+void setup() {
+  Serial.begin(115200);
+
+  // Initialize the PCA9685 servo driver
+  pwm.begin();
+  pwm.setPWMFreq(50);  // Analog servos run at ~50 Hz updates
+
+  // Move all servos to 0 degrees initially
+  moveServo(SERVO1, 90);
+  moveServo(SERVO2, 90);
+  moveServo(SERVO3, 90);
+  delay(1000);
+
+
+}
+
+void loop() {
+  int angle1;
+  int angle2;
+  int angle3;
+
+
+
+  Serial.println("enter angle for thigh");
+  Serial.println("");
+
+  
+
+  while (Serial.available() == 0) {}
+  
+  if (Serial.available()){
+    int servo = Serial.parseInt();
+    if( servo == 1){
+      while(Serial.available()>0){
+        Serial.read();
+      }
+      while(Serial.available() == 0){}
+      if (Serial.available()) {
+        int angle1 = Serial.parseInt();
+        Serial.print("angle1= ");
+        Serial.println(angle1);
+        moveServo(SERVO1,angle1);
+        delay(15);
+      }
+    }
+
+    if( servo == 2){
+      while(Serial.available()>0){
+        Serial.read();
+      }
+      while(Serial.available() == 0){}
+      if (Serial.available()) {
+        int angle2 = Serial.parseInt();
+        Serial.print("angle2= ");
+        Serial.println(angle2);
+        moveServo(SERVO2,angle2);
+        delay(15);
+      }
+    }
+
+
+    if( servo == 3){
+      while(Serial.available()>0){
+        Serial.read();
+      }
+      while(Serial.available() == 0){}
+      if (Serial.available()) {
+        int angle3 = Serial.parseInt();
+        Serial.print("angle3= ");
+        Serial.println(angle3);
+        moveServo(SERVO3,angle3);
+        delay(15);
+      }
+    }
+
+    
+  }
+  
+
+  
+ // Adjust the delay to control the speed of the servo movement
+  
+
+  while(Serial.available()>0){
+    Serial.read();
+  }
+
+  
+} 
+  
+
+
+// Function to move a servo to a specific angle
