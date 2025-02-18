@@ -1,0 +1,69 @@
+#include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
+
+#define SERVOMIN 150  // Minimum pulse length
+#define SERVOMAX 600  // Maximum pulse length
+
+// PCA9685 instance
+Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
+
+// Define servo channels on PCA9685
+#define SERVO1 3
+#define SERVO2 1
+#define SERVO3 2
+
+void setup() {
+  Serial.begin(115200);
+
+  // Initialize PCA9685
+  pwm.begin();
+  pwm.setPWMFreq(50);  // 50 Hz frequency for servos
+  delay(1000);
+
+  // Move servos to initial positions
+  moveServo(SERVO1, 140);
+  moveServo(SERVO2, 120);
+  moveServo(SERVO3, 90);
+  delay(1000);
+}
+
+void loop() {
+
+  for (int i = 0; i <= 30; i++) {
+    moveServo(SERVO1, 140 - i);
+    //moveServo(SERVO2, 90 + i);
+    moveServo(SERVO3, 90 - (i * 1.5));
+    delay(15);
+  }
+
+  // First movement: Servo1 (150° to 180° and back), Servo2 (45° to 90° and back), Servo3 (45° to 135°)
+  for (int i = 0; i <= 30; i++) {
+    moveServo(SERVO1, 110 + i);
+    moveServo(SERVO2, 120 + i);  // 45 to 90
+    moveServo(SERVO3, 45 + (i * 1.5));  // 45 to 90
+    delay(15);
+  }
+  for (int i = 0; i <= 30; i++) {
+    moveServo(SERVO1, 140 - i);
+    moveServo(SERVO2, 150 - i);
+    moveServo(SERVO3, 90 + (i * 1.5));  // 90 to 135
+    delay(15);
+  }
+
+  // Second movement: Servo3 (135° to 45°) while Servo1 moves again (150° to 180° and back)
+  for (int i = 0; i <= 30; i++) {
+    moveServo(SERVO1, 110 + i);
+    //moveServo(SERVO2, 120 - i);
+    moveServo(SERVO3, 135 - (i * 1.5));
+    delay(15);
+  }
+  
+
+  // The cycle repeats
+}
+
+// Function to move a servo to a specific angle using PCA9685
+void moveServo(uint8_t servoNum, int angle) {
+  int pulseLength = map(angle, 0, 180, SERVOMIN, SERVOMAX);
+  pwm.setPWM(servoNum, 0, pulseLength);
+}
